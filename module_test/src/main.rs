@@ -1,6 +1,6 @@
 mod module_hello;
-use crate::module_hello::module_b;
 use crate::module_hello::module_b::func_b;
+use crate::module_hello::{module_b, print_hello};
 use serde_json::json;
 
 use serde_json::{Result, Value};
@@ -29,7 +29,10 @@ fn untyped_example() -> Result<()> {
     let v: Value = serde_json::from_str(data)?;
 
     // Access parts of the data by indexing with square brackets.
-    println!("Please call {} at the number {}", v[1]["name"], v[1]["phones"][0]);
+    println!(
+        "Please call {} at the number {}",
+        v[1]["name"], v[1]["phones"][0]
+    );
 
     Ok(())
 }
@@ -39,5 +42,5 @@ fn main() {
     module_hello::module_b::func_b();
     module_b::func_b();
     func_b();
-    untyped_example();
+    untyped_example().unwrap();
 }
