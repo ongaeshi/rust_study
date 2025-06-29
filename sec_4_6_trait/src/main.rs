@@ -5,13 +5,19 @@ struct  Person {
 }
 
 #[derive(Debug)]
-struct  Parents {
-    father: Person,
-    mother: Person
+struct  Parents<'a, 'b> {
+    father: &'a Person,
+    mother: &'b Person
+}
+
+impl<'a, 'b> Parents<'a, 'b> {
+    fn new(father: &'a Person, mother: &'b Person) -> Parents<'a, 'b> {
+        Parents{father, mother}
+    }
 }
 
 fn main() {
-    let taro = Person {
+    let mut taro = Person {
         name: String::from("taro"),
         age: 54
     };
@@ -20,12 +26,16 @@ fn main() {
         age: 48
     };
 
-    // ここで所有権が移動する
-    let sato: Parents = Parents { father: taro, mother: hanako };
+    let sato: Parents = Parents { father: &taro, mother: &hanako };
 
     // Person { name: "taro", age: 10 }
-    // println!("{:?}", taro);  
+    println!("{:?}", taro);  
 
     // Parents { father: Person { name: "taro", age: 54 }, mother: Person { name: "hanako", age: 48 } }
     println!("{:?}", sato);  
+    
+    taro.age = 30;
+
+    let hi = Parents::new(&taro, &hanako);
+    println!("{:?}", hi);
 }
