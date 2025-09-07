@@ -12,6 +12,7 @@ fn print_link(start_node: Rc<Node>) {
         if p.child.is_none() {
             break;
         }
+        // p = p.child.unwrap(); //=> cannot move out of `Rc`
         p = Rc::clone(p.child.as_ref().unwrap());
     }
 }
