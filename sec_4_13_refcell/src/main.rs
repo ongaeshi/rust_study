@@ -13,7 +13,13 @@ fn print_link(start_node: Rc<Node>) {
             break;
         }
         // p = p.child.unwrap(); //=> cannot move out of `Rc`
+        // as_ref() -> &Option<T> を Option<&T> に変換する。
         p = Rc::clone(p.child.as_ref().unwrap());
+        // p                                    => Node
+        // p.child                              => Option<Rc<Node>>
+        // p.child.as_ref()                     => Option<&Rc<Node>>
+        // p.child.as_ref().unwrap()            => &Rc<Node>> or Exception
+        // Rc::clone(p.child.as_ref().unwrap()) => Rc<Node>
     }
 }
 
