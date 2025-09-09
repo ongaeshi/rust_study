@@ -1,41 +1,39 @@
+use std::cell::RefCell;
 use std::rc::Rc;
 
 struct Node {
     data: i32,
-    child: Option<Rc<Node>>
+    child: Option<Rc<RefCell<Node>>>
 }
 
-fn print_link(start_node: Rc<Node>) {
+fn print_link(start_node: Rc<RefCell<Node>>) {
     let mut p = start_node;
     loop {
-        println!("{}", p.data);
-        if p.child.is_none() {
+        println!("{}", p.borrow().data);
+        if p.borrow().child.is_none() {
             break;
         }
-        // p = p.child.unwrap(); //=> cannot move out of `Rc`
-        // as_ref() -> &Option<T> を Option<&T> に変換する。
-        p = Rc::clone(p.child.as_ref().unwrap());
-        // p                                    => Node
-        // p.child                              => Option<Rc<Node>>
-        // p.child.as_ref()                     => Option<&Rc<Node>>
-        // p.child.as_ref().unwrap()            => &Rc<Node>> or Exception
-        // Rc::clone(p.child.as_ref().unwrap()) => Rc<Node>
+        let ptmp = Rc::clone(p.borrow().child.as_ref().unwrap());
+        p = ptmp;
     }
 }
 
 fn main() {
-    let node3 = Rc::new(Node {
+    let node1 = Rc::new(RefCell::new(Node {
+        data: 1,
+        child: None,
+    }));
+    let node2 = Rc::new(RefCell::new(Node {
+        data: 2,
+        child: None,
+    }));
+    let node3 = Rc::new(RefCell::new(Node {
         data: 3,
         child: None,
-    });
-    let node1 = Rc::new(Node {
-        data: 1,
-        child: Some(Rc::clone(&node3)),
-    });
-    let node2 = Rc::new(Node {
-        data: 2,
-        child: Some(Rc::clone(&node3)),
-    });
+    }));
+
+    node1.borrow_mut().child = Some(Rc::clone(&node3));
+    node2.borrow_mut().child = Some(Rc::clone(&node3));
 
     println!("link from node1");
     print_link(node1);
