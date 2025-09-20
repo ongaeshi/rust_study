@@ -1,0 +1,7 @@
+[package]
+name = "sec_6_1_read_bitmap_header"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+byteorder = "1"
