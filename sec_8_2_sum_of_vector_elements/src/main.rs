@@ -32,7 +32,7 @@ fn main() -> std::thread::Result<()> {
         // let vv = (&v[ist..ien]).to_owned(); // ベクトルデータをコピーしないとスレッドで使えない
         // let th = std::thread::spawn(move || vv.into_iter().sum::<usize>());
         let vv = std::sync::Arc::clone(&v);
-        let th = std::thread::spawn(move || vv[ist..ien].iter().sum::<usize>());
+        let th = std::thread::spawn(move || vv[ist..ien].into_iter().sum::<usize>());
         thrd.push(th);
     }
 
