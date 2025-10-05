@@ -10,20 +10,28 @@ const RESIDUAL: usize = N_MAX % N_THREAD;
 // real    0m1.212s
 // real    0m0.736s
 // real    0m0.767s
+//
+// Arcで共有版
+// real    0m0.879s
+// real    0m0.534s
+// real    0m0.460s
 fn main() -> std::thread::Result<()> {
     if RESIDUAL != 0 {
         panic!("invalid combination of N_MAX and N_THREAD");
     }
 
     let mut thrd = Vec::new();
-    let v = (1..=N_MAX).collect::<Vec<usize>>();
+    // let v = (1..=N_MAX).collect::<Vec<usize>>();
+    let v = std::sync::Arc::new((1..=N_MAX).collect::<Vec<usize>>()); // Arcで共有版
 
     // 1..=N_MAX を N_THREAD に分割して、それぞれの和をスレッドで計算。
     for ii in 0..N_THREAD {
         let ist = ii * N_ELEM_PER_THRD;
         let ien = ist + N_ELEM_PER_THRD;
-        let vv = (&v[ist..ien]).to_owned(); // ベクトルデータをコピーしないとスレッドで使えない
-        let th = std::thread::spawn(move || vv.into_iter().sum::<usize>());
+        // let vv = (&v[ist..ien]).to_owned(); // ベクトルデータをコピーしないとスレッドで使えない
+        // let th = std::thread::spawn(move || vv.into_iter().sum::<usize>());
+        let vv = std::sync::Arc::clone(&v);
+        let th = std::thread::spawn(move || vv[ist..ien].iter().sum::<usize>());
         thrd.push(th);
     }
 
