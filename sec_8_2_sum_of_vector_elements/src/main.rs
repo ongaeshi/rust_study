@@ -4,6 +4,7 @@ const N_THREAD: usize = 4;
 const N_ELEM_PER_THRD: usize = N_MAX / N_THREAD;
 const RESIDUAL: usize = N_MAX % N_THREAD;
 
+// 複数スレッドで計算
 // ベクトルコピー版
 // for i in $(seq 3); do time ./sec_8_2_sum_of_vector_elements; done
 // 5000000050000000
@@ -44,3 +45,14 @@ fn main() -> std::thread::Result<()> {
     assert_eq!(ans, N_MAX * (N_MAX + 1) / 2);
     Ok(())
 }
+
+// シングルスレッド版
+// real    0m1.565s
+// real    0m0.409s
+// real    0m0.411s
+// fn main() {
+//     let v = (1..=N_MAX).collect::<Vec<usize>>();
+//     let ans = v[0..N_MAX].iter().sum::<usize>();
+//     println!("{}", ans);
+//     assert_eq!(ans, N_MAX * (N_MAX + 1) / 2);
+// }
