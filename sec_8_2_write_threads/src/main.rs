@@ -1,8 +1,8 @@
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use std::thread::spawn;
 
 fn main() {
-    let data = Arc::new(Vec::new());
+    let data = Arc::new(Mutex::new(Vec::new()));
 
     let added = vec![1, 2, 3, 4, 5];
 
@@ -10,6 +10,7 @@ fn main() {
     for aa in added {
         let data = Arc::clone(&data);
         let th = spawn(move || {
+            let mut data = data.lock().unwrap();
             data.push(aa);
         });
         thrd.push(th);
@@ -19,5 +20,6 @@ fn main() {
         let _ = th.join();
     });
 
-    println!("{:?}", *data);
+    let x = data.lock().unwrap();
+    println!("{:?}", *x);
 }
