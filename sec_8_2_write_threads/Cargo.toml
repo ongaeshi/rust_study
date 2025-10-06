@@ -1,0 +1,6 @@
+[package]
+name = "sec_8_2_write_threads"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
