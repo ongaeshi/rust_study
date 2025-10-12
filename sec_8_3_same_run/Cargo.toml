@@ -1,0 +1,8 @@
+[package]
+name = "sec_8_3_same_run"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tokio = { version = "1.12.0", features = ["full"] }
+futures = "0.3"
